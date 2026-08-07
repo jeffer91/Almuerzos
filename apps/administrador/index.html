@@ -1,0 +1,93 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="theme-color" content="#7d1d1d" />
+  <title>Pimentón Rojo — Administrador</title>
+  <link rel="stylesheet" href="./styles.css" />
+</head>
+<body>
+  <div id="loginView" class="shell">
+    <section class="login-card stack">
+      <div>
+        <div class="brand">PIMENTÓN ROJO</div>
+        <h1>Administrador</h1>
+        <p class="muted">Ingresa con tu nombre y PIN.</p>
+      </div>
+      <label class="field"><span>Nombre</span><input id="loginNombre" autocomplete="username" /></label>
+      <label class="field"><span>PIN de 6 dígitos</span><input id="loginPin" type="password" inputmode="numeric" maxlength="6" autocomplete="current-password" /></label>
+      <button id="loginBtn" class="btn primary">Ingresar</button>
+      <div id="loginMsg"></div>
+    </section>
+  </div>
+
+  <div id="appView" class="hidden">
+    <header class="topbar"><div class="brand">PIMENTÓN ROJO · ADMIN</div><div class="row"><span id="adminName"></span><button id="logoutBtn" class="btn secondary">Salir</button></div></header>
+    <main class="shell">
+      <section class="grid">
+        <div class="metric">Pedidos hoy<strong id="mPedidos">0</strong></div>
+        <div class="metric">Venta hoy<strong id="mVentas">$0,00</strong></div>
+        <div class="metric">Cobrado hoy<strong id="mCobrado">$0,00</strong></div>
+        <div class="metric">Por cobrar<strong id="mPendiente">$0,00</strong></div>
+      </section>
+
+      <nav class="tabs" id="tabs">
+        <button data-tab="pedidos" class="active">Pedidos</button>
+        <button data-tab="menu">Menú semanal</button>
+        <button data-tab="clientes">Clientes</button>
+        <button data-tab="pagos">Pagos</button>
+        <button data-tab="cuentas">Cuentas por cobrar</button>
+        <button data-tab="comprobantes">Comprobantes</button>
+      </nav>
+
+      <section id="tab-pedidos" class="tab-panel card stack">
+        <div class="row"><div><h2>Pedidos de hoy</h2><p class="muted" id="fechaHoy"></p></div><button id="refreshBtn" class="btn secondary">Actualizar</button></div>
+        <div class="table-wrap"><table class="table"><thead><tr><th>Cliente</th><th>Detalle</th><th>Total</th><th>Estado</th><th>Origen</th></tr></thead><tbody id="pedidosBody"></tbody></table></div>
+      </section>
+
+      <section id="tab-menu" class="tab-panel card stack hidden">
+        <div><h2>Menú semanal</h2><p class="muted">Guarda un menú distinto para cada día de la semana.</p></div>
+        <label class="field"><span>Fecha</span><input id="menuFecha" type="date" /></label>
+        <div id="menuItems" class="stack"></div>
+        <div class="row"><button id="addMenuItem" class="btn secondary">+ Plato</button><button id="saveMenu" class="btn primary">Guardar menú del día</button></div>
+        <div id="menuMsg"></div>
+      </section>
+
+      <section id="tab-clientes" class="tab-panel card stack hidden">
+        <div><h2>Clientes y usuarios</h2><p class="muted">Los registrados pueden entrar con nombre + PIN. Los ocasionales solo se usan para ventas rápidas.</p></div>
+        <div class="form-grid">
+          <label class="field"><span>Nombre</span><input id="clienteNombre" /></label>
+          <label class="field"><span>Tipo</span><select id="clienteTipo"><option value="registrado">Registrado</option><option value="ocasional">Ocasional</option><option value="vendedor">Vendedor</option></select></label>
+          <label class="field"><span>PIN (solo registrado/vendedor)</span><input id="clientePin" inputmode="numeric" maxlength="6" /></label>
+        </div>
+        <button id="crearCliente" class="btn primary">Crear</button>
+        <div id="clienteMsg"></div>
+        <div class="table-wrap"><table class="table"><thead><tr><th>Nombre</th><th>Tipo</th><th>Activo</th></tr></thead><tbody id="clientesBody"></tbody></table></div>
+      </section>
+
+      <section id="tab-pagos" class="tab-panel card stack hidden">
+        <div><h2>Registrar pago</h2><p class="muted">Puede ser efectivo o transferencia y puede cubrir uno o varios almuerzos.</p></div>
+        <div class="form-grid">
+          <label class="field"><span>Cliente</span><select id="pagoCliente"></select></label>
+          <label class="field"><span>Monto</span><input id="pagoMonto" type="number" min="0.01" step="0.01" /></label>
+          <label class="field"><span>Método</span><select id="pagoMetodo"><option value="efectivo">Efectivo</option><option value="transferencia">Transferencia</option></select></label>
+        </div>
+        <button id="guardarPago" class="btn primary">Registrar pago</button>
+        <div id="pagoMsg"></div>
+      </section>
+
+      <section id="tab-cuentas" class="tab-panel card stack hidden">
+        <div><h2>Cuentas por cobrar</h2><p class="muted">Consumos confirmados menos pagos confirmados.</p></div>
+        <div class="table-wrap"><table class="table"><thead><tr><th>Cliente</th><th>Consumido</th><th>Pagado</th><th>Saldo</th></tr></thead><tbody id="cuentasBody"></tbody></table></div>
+      </section>
+
+      <section id="tab-comprobantes" class="tab-panel card stack hidden">
+        <div><h2>Comprobantes de transferencia</h2><p class="muted">Revisa los comprobantes enviados por compradores.</p></div>
+        <div id="comprobantesList" class="stack"></div>
+      </section>
+    </main>
+  </div>
+  <script type="module" src="./src/main.js"></script>
+</body>
+</html>
