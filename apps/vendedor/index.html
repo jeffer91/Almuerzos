@@ -1,0 +1,79 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="theme-color" content="#7d1d1d" />
+  <title>Pimentón Rojo — Vendedor</title>
+  <link rel="stylesheet" href="./styles.css" />
+</head>
+<body>
+  <div id="loginView" class="shell">
+    <section class="login-card stack">
+      <div><div class="brand">PIMENTÓN ROJO</div><h1>Vendedor</h1><p class="muted">Ingresa con nombre + PIN.</p></div>
+      <label class="field"><span>Nombre</span><input id="loginNombre" autocomplete="username" /></label>
+      <label class="field"><span>PIN de 6 dígitos</span><input id="loginPin" type="password" inputmode="numeric" maxlength="6" /></label>
+      <button id="loginBtn" class="btn primary">Ingresar</button>
+      <div id="loginMsg"></div>
+    </section>
+  </div>
+
+  <div id="appView" class="hidden">
+    <header class="topbar"><div class="brand">PIMENTÓN ROJO · VENDEDOR</div><div class="row"><span id="sellerName"></span><button id="logoutBtn" class="btn secondary">Salir</button></div></header>
+    <main class="shell">
+      <section class="grid">
+        <div class="metric">Pedidos hoy<strong id="mPedidos">0</strong></div>
+        <div class="metric">Almuerzos<strong id="mUnidades">0</strong></div>
+        <div class="metric">Total hoy<strong id="mTotal">$0,00</strong></div>
+      </section>
+
+      <nav class="tabs" id="tabs">
+        <button data-tab="pedidos" class="active">Pedidos de hoy</button>
+        <button data-tab="nuevo">Nuevo pedido</button>
+        <button data-tab="cuentas">Cuentas</button>
+        <button data-tab="pagos">Registrar pago</button>
+        <button data-tab="comprobantes">Transferencias</button>
+      </nav>
+
+      <section id="tab-pedidos" class="tab-panel card stack">
+        <div class="row"><div><h2>Pedidos de hoy</h2><p class="muted" id="fechaHoy"></p></div><button id="refreshBtn" class="btn secondary">Actualizar</button></div>
+        <div class="table-wrap"><table class="table"><thead><tr><th>Cliente</th><th>Pedido</th><th>Total</th><th>Estado</th><th>Acción</th></tr></thead><tbody id="pedidosBody"></tbody></table></div>
+      </section>
+
+      <section id="tab-nuevo" class="tab-panel card stack hidden">
+        <div><h2>Nuevo pedido</h2><p class="muted">Para pedidos por WhatsApp, teléfono o presencial.</p></div>
+        <div class="form-grid">
+          <label class="field"><span>Cliente</span><select id="pedidoCliente"></select></label>
+          <label class="field"><span>Origen</span><select id="pedidoOrigen"><option value="whatsapp">WhatsApp</option><option value="telefono">Teléfono</option><option value="presencial">Presencial</option><option value="vendedor">Vendedor</option></select></label>
+          <label class="field"><span>Plato</span><select id="pedidoPlato"></select></label>
+          <label class="field"><span>Cantidad</span><input id="pedidoCantidad" type="number" min="1" value="1" /></label>
+        </div>
+        <button id="guardarPedido" class="btn primary">Registrar pedido</button>
+        <div id="pedidoMsg"></div>
+      </section>
+
+      <section id="tab-cuentas" class="tab-panel card stack hidden">
+        <div class="row"><div><h2>Cuentas</h2><p class="muted">Consulta lo consumido, pagado y pendiente.</p></div><input id="buscarCuenta" placeholder="Buscar cliente..." /></div>
+        <div class="table-wrap"><table class="table"><thead><tr><th>Cliente</th><th>Consumido</th><th>Pagado</th><th>Saldo</th></tr></thead><tbody id="cuentasBody"></tbody></table></div>
+      </section>
+
+      <section id="tab-pagos" class="tab-panel card stack hidden">
+        <div><h2>Registrar pago</h2><p class="muted">Pago total, parcial o de varios almuerzos.</p></div>
+        <div class="form-grid">
+          <label class="field"><span>Cliente</span><select id="pagoCliente"></select></label>
+          <label class="field"><span>Monto</span><input id="pagoMonto" type="number" min="0.01" step="0.01" /></label>
+          <label class="field"><span>Método</span><select id="pagoMetodo"><option value="efectivo">Efectivo</option><option value="transferencia">Transferencia</option></select></label>
+        </div>
+        <button id="guardarPago" class="btn primary">Registrar pago</button>
+        <div id="pagoMsg"></div>
+      </section>
+
+      <section id="tab-comprobantes" class="tab-panel card stack hidden">
+        <div><h2>Transferencias pendientes</h2><p class="muted">Aprobar una transferencia registra automáticamente el pago.</p></div>
+        <div id="comprobantesList" class="stack"></div>
+      </section>
+    </main>
+  </div>
+  <script type="module" src="./src/main.js"></script>
+</body>
+</html>
