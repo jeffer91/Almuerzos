@@ -1,0 +1,97 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+    function signedIn() {
+      return request.auth != null;
+    }
+
+    function userDoc() {
+      return get(/databases/$(database)/documents/usuarios/$(request.auth.uid));
+    }
+
+    function activeUser() {
+      return signedIn() && userDoc().data.activo == true;
+    }
+
+    function isAdmin() {
+      return activeUser() && userDoc().data.rol == 'admin';
+    }
+
+    function isSeller() {
+      return activeUser() && userDoc().data.rol == 'vendedor';
+    }
+
+    function isStaff() {
+      return isAdmin() || isSeller();
+    }
+
+    match /usuarios/{uid} {
+      allow read: if signedIn() && (request.auth.uid == uid || isStaff());
+      allow create, update: if isAdmin();
+      allow delete: if false;
+    }
+
+    match /clientes/{clienteId} {
+      allow read: if isStaff() || (activeUser() && resource.data.uid == request.auth.uid);
+      allow create, update: if isStaff();
+      allow delete: if false;
+    }
+
+    match /menus/{menuId} {
+      allow read: if activeUser();
+      allow create, update: if isAdmin();
+      allow delete: if false;
+    }
+
+    match /pedidos/{pedidoId} {
+      allow read: if isStaff() || (activeUser() && resource.data.compradorUid == request.auth.uid);
+
+      allow create: if isStaff() || (
+        activeUser()
+        && userDoc().data.rol == 'comprador'
+        && request.resource.data.compradorUid == request.auth.uid
+        && request.resource.data.creadoPor == request.auth.uid
+        && request.resource.data.estado == 'confirmado'
+        && request.resource.data.total >= 0
+      );
+
+      allow update: if isStaff() || (
+        activeUser()
+        && resource.data.compradorUid == request.auth.uid
+        && resource.data.estado == 'confirmado'
+        && request.resource.data.estado == 'cancelado'
+        && request.resource.data.diff(resource.data).affectedKeys().hasOnly(['estado', 'canceladoEn'])
+      );
+
+      allow delete: if false;
+    }
+
+    match /pagos/{pagoId} {
+      allow read: if isStaff() || (activeUser() && resource.data.clienteUid == request.auth.uid);
+      allow create, update: if isStaff();
+      allow delete: if false;
+    }
+
+    match /comprobantes/{comprobanteId} {
+      allow read: if isStaff() || (activeUser() && resource.data.clienteUid == request.auth.uid);
+
+      allow create: if activeUser()
+        && userDoc().data.rol == 'comprador'
+        && request.resource.data.clienteUid == request.auth.uid
+        && request.resource.data.estado == 'pendiente';
+
+      allow update: if isStaff();
+      allow delete: if false;
+    }
+
+    match /auditoria/{id} {
+      allow read: if isAdmin();
+      allow create: if isStaff();
+      allow update, delete: if false;
+    }
+
+    match /{document=**} {
+      allow read, write: if false;
+    }
+  }
+}
