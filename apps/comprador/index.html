@@ -1,0 +1,61 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="theme-color" content="#7d1d1d" />
+  <title>Pimentón Rojo — Comprador</title>
+  <link rel="stylesheet" href="./styles.css" />
+</head>
+<body>
+  <div id="loginView" class="shell">
+    <section class="login-card stack">
+      <div><div class="brand">PIMENTÓN ROJO</div><h1>Mis almuerzos</h1><p class="muted">Ingresa con tu nombre y PIN.</p></div>
+      <label class="field"><span>Nombre</span><input id="loginNombre" autocomplete="username" /></label>
+      <label class="field"><span>PIN de 6 dígitos</span><input id="loginPin" type="password" inputmode="numeric" maxlength="6" /></label>
+      <button id="loginBtn" class="btn primary">Ingresar</button>
+      <div id="loginMsg"></div>
+    </section>
+  </div>
+
+  <div id="appView" class="hidden">
+    <header class="topbar"><div class="brand">PIMENTÓN ROJO</div><div class="row"><span id="buyerName"></span><button id="logoutBtn" class="btn secondary">Salir</button></div></header>
+    <main class="shell">
+      <section class="metric-grid">
+        <div class="metric">Consumido<strong id="mConsumido">$0,00</strong></div>
+        <div class="metric">Pagado<strong id="mPagado">$0,00</strong></div>
+        <div class="metric">Saldo<strong id="mSaldo">$0,00</strong></div>
+      </section>
+
+      <nav class="tabs" id="tabs">
+        <button data-tab="menu" class="active">Menú de hoy</button>
+        <button data-tab="pedidos">Mis pedidos</button>
+        <button data-tab="pago">Subir transferencia</button>
+      </nav>
+
+      <section id="tab-menu" class="tab-panel card stack">
+        <div><h2>Menú de hoy</h2><p id="fechaHoy" class="muted"></p></div>
+        <div id="menuList"></div>
+        <div class="total-bar"><span>Total pedido</span><span id="cartTotal">$0,00</span></div>
+        <button id="confirmarPedido" class="btn primary">Confirmar pedido</button>
+        <div id="pedidoMsg"></div>
+      </section>
+
+      <section id="tab-pedidos" class="tab-panel card stack hidden">
+        <div><h2>Mis pedidos</h2><p class="muted">Los pedidos confirmados cuentan automáticamente en tu consumo. Los cancelados no.</p></div>
+        <div id="pedidosList"></div>
+      </section>
+
+      <section id="tab-pago" class="tab-panel card stack hidden">
+        <div><h2>Subir comprobante</h2><p class="muted">El saldo se descuenta cuando el vendedor aprueba la transferencia.</p></div>
+        <label class="field"><span>Monto transferido</span><input id="transferMonto" type="number" min="0.01" step="0.01" /></label>
+        <label class="field"><span>Comprobante</span><input id="transferFile" type="file" accept="image/*,.pdf" /></label>
+        <button id="subirTransferencia" class="btn primary">Enviar comprobante</button>
+        <div id="transferMsg"></div>
+        <div><h3>Mis comprobantes</h3><div id="comprobantesList" class="stack"></div></div>
+      </section>
+    </main>
+  </div>
+  <script type="module" src="./src/main.js"></script>
+</body>
+</html>
